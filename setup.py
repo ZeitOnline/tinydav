@@ -6,7 +6,6 @@ from distutils.core import setup
 
 import tinydav
 
-VERSION = tinydav.__version__
 DOWNLOAD = "http://tinydav.googlecode.com/files/tinydav-%s.tar.gz" % VERSION
 DESCRIPTION = "An easy-to-use HTTP and WebDAV client library."
 LONG_DESCRIPTION = """\
@@ -46,7 +45,7 @@ if __name__ == "__main__":
     setup(
         name="tinydav",
         packages=["tinydav"],
-        version=VERSION,
+        version=0.7.0,
         description=DESCRIPTION,
         long_description=LONG_DESCRIPTION,
         author="Manuel Hermann",

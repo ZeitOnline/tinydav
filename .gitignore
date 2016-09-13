@@ -21,3 +21,4 @@ configure-stamp
 *.prerm.debhelper
 *.substvars
 pycerberus.egg-info
+tinydav.egg-info/

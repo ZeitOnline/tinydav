@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='tinydav',
     url='https://github.com/ZeitOnline/tinydav',
-    version='0.7.5+patchmultipleprops2',
+    version='0.7.5+patchmultipleprops3.dev0',
     author='Manuel Hermann, Zeit Online',
     author_email='zon-backend@zeit.de',
     description='A small and handy WebDav Client',

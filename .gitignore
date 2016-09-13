@@ -22,3 +22,4 @@ configure-stamp
 *.substvars
 pycerberus.egg-info
 tinydav.egg-info/
+*.pyo

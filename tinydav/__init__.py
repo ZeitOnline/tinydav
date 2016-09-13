@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """The tinydav WebDAV client."""
+__import__('pkg_resources').declare_namespace(__name__)
 from __future__ import with_statement
 import sys
 
@@ -124,7 +125,7 @@ class HTTPResponse(int):
     def __init__(self, response):
         """Initialize the HTTPResponse.
 
-        response -- The original httplib.HTTPResponse object. 
+        response -- The original httplib.HTTPResponse object.
 
         """
         self.response = response
@@ -182,7 +183,7 @@ class WebDAVResponse(HTTPResponse):
     object per result. If it was no multi-status response, the iterator will
     just yield this WebDAVResponse object.
 
-    The length of a WebDAVResponse object is 1, except for multi-status 
+    The length of a WebDAVResponse object is 1, except for multi-status
     responses. The length will then be the number of results in the
     multi-status.
 
@@ -190,7 +191,7 @@ class WebDAVResponse(HTTPResponse):
     def __init__(self, response):
         """Initialize the WebDAVResponse.
 
-        response -- The original httplib.HTTPResponse object. 
+        response -- The original httplib.HTTPResponse object.
 
         """
         super(WebDAVResponse, self).__init__(response)
@@ -232,7 +233,7 @@ class WebDAVResponse(HTTPResponse):
     def _parse_xml_content(self):
         """Parse the XML content.
 
-        If the response content cannot be parsed as XML content, 
+        If the response content cannot be parsed as XML content,
         <root><empty/></root> will be taken as content instead.
 
         """
@@ -258,7 +259,7 @@ class WebDAVResponse(HTTPResponse):
 class WebDAVLockResponse(WebDAVResponse):
     """Result from WebDAV LOCK request.
 
-    A WebDAVLockResponse object is a subclass of WebDAVResponse which is a 
+    A WebDAVLockResponse object is a subclass of WebDAVResponse which is a
     subclass of int. The int value of such an object is the HTTP status number
     from the response.
 
@@ -283,7 +284,7 @@ class WebDAVLockResponse(WebDAVResponse):
     object per result. If it was no multi-status response, the iterator will
     just yield this WebDAVLockResponse object.
 
-    The length of a WebDAVLockResponse object is 1, except for multi-status 
+    The length of a WebDAVLockResponse object is 1, except for multi-status
     responses. The length will then be the number of results in the
     multi-status.
 
@@ -303,10 +304,10 @@ class WebDAVLockResponse(WebDAVResponse):
     """
     def __new__(cls, client, uri, response):
         """Construct WebDAVLockResponse.
-        
+
         client -- HTTPClient instance or one of its subclasses.
         uri -- The called uri.
-        response --The original httplib.HTTPResponse object. 
+        response --The original httplib.HTTPResponse object.
 
         """
         return WebDAVResponse.__new__(cls, response)
@@ -464,7 +465,7 @@ class MultiStatusResponse(int):
     A MultiStatusResponse object is a subclass of int. The int value of such an
     object is the HTTP status number from the response.
 
-    Furthermore this object implements the dictionary interface. Through it 
+    Furthermore this object implements the dictionary interface. Through it
     you can access all properties that the resource has.
 
     This object has the following attributes:
@@ -777,7 +778,7 @@ class HTTPClient(object):
 
         uri -- URI the request is for.
         headers -- Mapping with additional headers to send. Unicode values that
-                   are no ASCII will be MIME-encoded with UTF-8. Set 
+                   are no ASCII will be MIME-encoded with UTF-8. Set
                    tinydav.default_header_encoding to another encoding, if
                    UTF-8 doesn't suit you.
         query -- Mapping with key/value-pairs to be added as query to the URI.
@@ -825,7 +826,7 @@ class HTTPClient(object):
 
             user -- Username as bytes string.
             password -- Password for user as bytes.
-            encoder -- Base64 encoder function. Default is the standard 
+            encoder -- Base64 encoder function. Default is the standard
                        encoder. Should not be changed.
 
             """
@@ -930,12 +931,12 @@ class HTTPClient(object):
         headers -- If given, must be a mapping with headers to set.
         query -- Mapping with key/value-pairs to be added as query to the URI.
         as_multipart -- Send post data as multipart/form-data. content must be
-                        a dict, then. If content is not a dict, then this 
+                        a dict, then. If content is not a dict, then this
                         argument will be ignored. The values of the dict may be
                         a subclass of email.mime.base.MIMEBase, which will be
                         attached to the multipart as is, a 2-tuple containing
                         the actual value (or file-like object) and an encoding
-                        for this value (or the content-type in case of a 
+                        for this value (or the content-type in case of a
                         file-like object).
         encoding -- Send multipart content with this encoding. Default is
                     ASCII.

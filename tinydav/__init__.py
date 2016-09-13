@@ -53,12 +53,18 @@ else:
 
 import hashlib
 
+if PYTHON2:
+    import urlparse
+else:
+    import urllib.parse as urlparse
+    unicode = str
+
 from tinydav import creator, util
 from tinydav.exception import HTTPError, HTTPUserError, HTTPServerError
 
 __author__ = "Manuel Hermann <manuel-hermann@gmx.net>"
 __license__ = "LGPL"
-__version__ = "0.7.0"
+__version__ = "0.7.5"
 
 __all__ = (
     "HTTPError", "HTTPUserError", "HTTPServerError",
@@ -77,6 +83,13 @@ PROTOCOL = {
     443: "https",
     8080: "http",
     8081: "http",
+}
+
+SCHEME_MAP = {
+    "webdav": ("http", 80),
+    "webdavs": ("https", 443),
+    "http": ("http", 80),
+    "https": ("https", 443),
 }
 
 
@@ -637,6 +650,20 @@ class HTTPClient(object):
 
     ResponseType = HTTPResponse
 
+    @classmethod
+    def fromurl(cls, uri, **kwargs):
+        """Construct HTTPClient instance from given uri."""
+        parsed = urlparse.urlparse(uri)
+
+        (protocol, port) = SCHEME_MAP[parsed.scheme]
+        if parsed.port:
+            port = parsed.port
+
+        self = cls(parsed.hostname, port=port, protocol=protocol, **kwargs)
+        if parsed.username:
+            self.setbasicauth(parsed.username, parsed.password)
+        return self
+
     def __init__(self, host, port=80, protocol=None, strict=False,
                  timeout=None, source_address=None):
         """Initialize the WebDAV client.
@@ -688,7 +715,10 @@ class HTTPClient(object):
     def _getconnection(self):
         """Return HTTP(S)Connection object depending on set protocol."""
         args = (self.host, self.port,)
-        kwargs = dict(strict=self.strict)
+        if PYTHON3:
+            kwargs = dict()
+        else:
+            kwargs = dict(strict=self.strict)
         if PYTHON2_6:
             kwargs["timeout"] = self.timeout
         if PYTHON2_7:
@@ -759,7 +789,9 @@ class HTTPClient(object):
         if headers:
             sendheaders.update(headers)
         for (key, value) in sendheaders.items():
-            if key.lower() != "authorization":
+            try:
+                unicode(value).encode("ascii")
+            except UnicodeError:
                 value = str(Header(value, default_header_encoding))
             sendheaders[key] = value
         # construct query string
@@ -1165,7 +1197,7 @@ class CoreWebDAVClient(HTTPClient):
             # A client MUST NOT submit a Depth header with a DELETE on a
             # collection with any value but infinity.
             headers["Depth"] = "infinity"
-        return super(CoreWebDAVClient, self).delete(uri, headers)
+        return super(CoreWebDAVClient, self).delete(uri, headers=headers)
 
     def copy(self, source, destination, depth="infinity",
              overwrite=None, headers=None):
@@ -1311,9 +1343,19 @@ class CoreWebDAVClient(HTTPClient):
 
 class ExtendedWebDAVClient(CoreWebDAVClient):
     """WebDAV client with versioning extensions (RFC 3253)."""
-    def report(self, uri, depth=0, properties=None,
-               elements=None, namespaces=None, headers=None):
-        """Make a REPORT request and return status.
+    def __report(self, uri, depth, content, headers):
+        depth = util.get_depth(depth)
+        (uri, headers) = self._prepare(uri, headers)
+        # RFC 3253, 3.6 REPORT Method
+        # The request MAY include a Depth header.  If no Depth header is
+        # included, Depth:0 is assumed.
+        headers["Depth"] = depth
+        headers["Content-Type"] = "application/xml"
+        return self._request("REPORT", uri, content, headers)
+
+    def version_tree_report(self, uri, depth=0, properties=None,
+                            elements=None, namespaces=None, headers=None):
+        """Make a version-tree-REPORT request and return status.
 
         uri -- Resource or collection to get report for.
         depth -- Either 0 or 1 or "infinity". Default is zero.
@@ -1329,15 +1371,34 @@ class ExtendedWebDAVClient(CoreWebDAVClient):
         Raise HTTPServerError on 5xx HTTP status codes.
 
         """
-        depth = util.get_depth(depth)
-        (uri, headers) = self._prepare(uri, headers)
-        content = creator.create_report(properties, elements, namespaces)
-        # RFC 3253, 3.6 REPORT Method
-        # The request MAY include a Depth header.  If no Depth header is
-        # included, Depth:0 is assumed.
-        headers["Depth"] = depth
-        headers["Content-Type"] = "application/xml"
-        return self._request("REPORT", uri, content, headers)
+        args = (properties, elements, namespaces)
+        content = creator.create_report_version_tree(*args)
+        return self.__report(uri, depth, content, headers)
+
+    # compatibility
+    report = version_tree_report
+
+    def expand_property_report(self, uri, depth=0, properties=None,
+                               elements=None, namespaces=None, headers=None):
+        """Make a expand-property-REPORT request and return status.
+
+        uri -- Resource or collection to get report for.
+        depth -- Either 0 or 1 or "infinity". Default is zero.
+        properties -- If given, an iterable with all requested properties is
+                      expected.
+        elements -- An iterable with additional XML (ElementTree) elements to
+                    append to the version-tree.
+        namespaces -- Mapping with namespaces for given properties, if needed.
+        headers -- If given, must be a mapping with headers to set.
+
+        Raise ValueError, if an illegal depth value was given.
+        Raise HTTPUserError on 4xx HTTP status codes.
+        Raise HTTPServerError on 5xx HTTP status codes.
+
+        """
+        args = (properties, elements, namespaces)
+        content = creator.create_report_expand_property(*args)
+        return self.__report(uri, depth, content, headers)
 
 
 class WebDAVClient(ExtendedWebDAVClient):

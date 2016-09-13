@@ -1,0 +1,10 @@
+zeit.syncer changes
+===================
+
+
+0.7.0 (unreleased)
+----------------
+
+- bugfix for multiple propd proppatch
+- initial release for ZON release branch
+

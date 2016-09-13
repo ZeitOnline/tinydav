@@ -108,18 +108,18 @@ def create_proppatch(setprops, delprops, namespaces=None):
     # <!ELEMENT set (prop) >
     if setprops:
         set_ = SubElement(propertyupdate, "set")
-        prop = SubElement(set_, "prop")
+        prop_el = SubElement(set_, "prop")
         items_iterator = setprops.iteritems() if PYTHON2 else setprops.items()
         for (propname, propvalue) in items_iterator:
-            prop = SubElement(prop, propname)
+            prop = SubElement(prop_el, propname)
             prop.text = propvalue
     # RFC 2518, 12.13.1 set XML element
     # <!ELEMENT remove (prop) >
     if delprops:
         remove = SubElement(propertyupdate, "remove")
-        prop = SubElement(remove, "prop")
+        prop_el = SubElement(remove, "prop")
         for propname in delprops:
-            prop = SubElement(prop, propname)
+            prop = SubElement(prop_el, propname)
     return tostring(propertyupdate, "UTF-8")
 
 

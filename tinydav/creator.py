@@ -110,9 +110,9 @@ def create_proppatch(setprops, delprops, namespaces=None):
     # <!ELEMENT remove (prop) >
     if delprops:
         remove = SubElement(propertyupdate, "remove")
-        prop = SubElement(remove, "prop")
+        prop_el = SubElement(remove, "prop")
         for propname in delprops:
-            prop = SubElement(prop, propname)
+            prop = SubElement(prop_el, propname)
     return tostring(propertyupdate, "UTF-8")
 
 

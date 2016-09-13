@@ -45,7 +45,7 @@ if __name__ == "__main__":
     setup(
         name="tinydav",
         packages=["tinydav"],
-        version=0.7.0,
+        version='0.7.0+patchmultipleprops',
         description=DESCRIPTION,
         long_description=LONG_DESCRIPTION,
         author="Manuel Hermann",

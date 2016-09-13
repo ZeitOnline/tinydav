@@ -2,8 +2,8 @@ zeit.syncer changes
 ===================
 
 
-0.7.0 (unreleased)
-----------------
+0.7.0+patchmultipleprops (2016-09-13)
+-------------------------------------
 
 - bugfix for multiple propd proppatch
 - initial release for ZON release branch

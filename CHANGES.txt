@@ -2,6 +2,12 @@ zeit.syncer changes
 ===================
 
 
+0.7.6+patchmultipleprops (unreleased)
+-------------------------------------
+
+- Nothing changed yet.
+
+
 0.7.5+patchmultipleprops (2016-09-13)
 -------------------------------------
 

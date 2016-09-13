@@ -16,9 +16,9 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """The tinydav WebDAV client."""
-__import__('pkg_resources').declare_namespace(__name__)
 from __future__ import with_statement
 import sys
+__import__('pkg_resources').declare_namespace(__name__)
 
 PYTHON2_6 = (sys.version_info >= (2, 6))
 PYTHON2_7 = (sys.version_info >= (2, 7))

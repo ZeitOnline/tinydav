@@ -14,6 +14,7 @@ setup(
     zip_safe=False,
     keywords='WebDAV',
     license='LGPL',
+    packages=find_packages(),
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',

@@ -2,7 +2,7 @@ zeit.syncer changes
 ===================
 
 
-0.7.5+patchmultipleprops3 (unreleased)
+0.7.5+patchmultipleprops3 (2016-10-19)
 --------------------------------------
 
 - Fix setup.py.

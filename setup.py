@@ -9,7 +9,6 @@ setup(
     description='A small and handy WebDav Client',
     long_description=open('README.txt', 'r').read(),
     setup_requires=['setuptools_git'],
-    namespace_packages=['tinydav'],
     include_package_data=True,
     zip_safe=False,
     keywords='WebDAV',

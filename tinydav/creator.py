@@ -19,7 +19,7 @@
 from collections import defaultdict
 
 try:
-    from collections import Mapping
+    from collections.abc import Mapping
 except ImportError:
     Mapping = (dict, defaultdict)
 from xml.etree.ElementTree import Element, SubElement, tostring

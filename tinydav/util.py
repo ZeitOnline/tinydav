@@ -39,7 +39,7 @@ __all__ = (
     "extract_namespace", "get_depth"
 )
 
-authparser = re.compile("""
+authparser = re.compile(r"""
     (?P<schema>Basic|Digest)
     (
         \s+

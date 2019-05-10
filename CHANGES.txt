@@ -2,7 +2,7 @@ zeit.syncer changes
 ===================
 
 
-0.7.5+patchmultipleprops4 (unreleased)
+0.7.5+patchmultipleprops4 (2019-05-10)
 --------------------------------------
 
 - Fix Python-3.7 deprecation warnings
